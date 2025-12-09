@@ -1,6 +1,6 @@
 require('dotenv').config();  
 const express = require("express");
-const bodyParser = require("body-parser");
+const bodyParser = require("body-parser"); //cookie-parser
 const cors = require("cors");
 const { createClient } = require("@supabase/supabase-js");
 require("dotenv").config();
@@ -98,5 +98,37 @@ app.post("/api", async (req, res) => {
     res.status(500).json({ success: false, error: err.message });
   }
 });
+
+app.get("/check-session", async (req, res) => {
+  const token = req.cookies.sb_token; 
+  
+  if (!token) {
+    return res.json({ loggedIn: false });
+  }
+
+  // Verify token with Supabase
+  const { data: user, error } = await supabase.auth.getUser(token);
+
+  if (error || !user) {
+    return res.json({ loggedIn: false });
+  }
+  
+  res.json({ loggedIn: true, user: { id: user.id, email: user.email } });
+});
+
+// POST /logout
+app.post("/logout", async (req, res) => {
+  // Clear the HTTP-only cookie
+  res.clearCookie("sb_token");
+
+  // Optional: revoke the session in Supabase (server-side)
+  const token = req.cookies.sb_token;
+  if (token) {
+    await supabase.auth.admin.invalidateSession(token); 
+  }
+
+  res.json({ success: true, message: "Logged out" });
+});
+
 
 app.listen(3000, () => console.log("Server running on port 3000"));
