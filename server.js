@@ -115,22 +115,51 @@ app.post("/api", async (req, res) => {
   }
 });
 
-app.post("/checksession", async (req, res) => {
-  const token = req.cookies.sb_token; 
+// app.post("/checksession", async (req, res) => {
+//   const token = req.cookies.sb_token; 
   
+//   if (!token) {
+//     return res.json({ loggedIn: false });
+//   }
+
+//   // Verify token with Supabase
+//   const { data: user, error } = await supabase.auth.getUser(token);
+
+//   if (error || !user) {
+//     return res.json({ loggedIn: false });
+//   }
+  
+//   res.json({ loggedIn: true, user: { id: user.id, email: user.email } });
+// });
+app.post("/checksession", async (req, res) => {
+  const token = req.cookies.sb_token;
+
   if (!token) {
     return res.json({ loggedIn: false });
   }
 
-  // Verify token with Supabase
-  const { data: user, error } = await supabase.auth.getUser(token);
+  // Create a temporary supabase client using the token
+  const supa = createClient(SUPABASE_URL, SUPABASE_ANON, {
+    global: {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+  });
 
-  if (error || !user) {
+  const { data, error } = await supa.auth.getUser();
+
+  if (error || !data.user) {
     return res.json({ loggedIn: false });
   }
-  
-  res.json({ loggedIn: true, user: { id: user.id, email: user.email } });
+
+  res.json({
+    loggedIn: true,
+    user: {
+      id: data.user.id,
+      email: data.user.email
+    }
+  });
 });
+
 
 // POST /logout
 app.post("/logout", async (req, res) => {
