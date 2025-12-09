@@ -16,6 +16,19 @@ const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_KEY
 );
+ const allowedOrigins = ['https://filmseller.netlify.app'];
+
+    app.use((req, res, next) => {
+      const origin = req.headers.origin;
+      if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+      }
+      res.setHeader('Access-Control-Allow-Credentials', 'true'); // Required when sending credentials
+      res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
+      res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+      next();
+    });
+    
 
 // Main API endpoint
 app.post("/api", async (req, res) => {
