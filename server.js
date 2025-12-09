@@ -191,15 +191,15 @@ app.post("/submit-idea", async (req, res) => {
       .from("Ideas")
       .insert([
         {
-          own: user,
-          category,
+          own: "zaxharr",
+          category: "action",
           title,
           hook,
           describe,
           pdf,
           banner,
-          rate: rateNum,
-          available: available === true || available === "on",
+          rate: 0,
+          available: true,
           date
         }
       ])
