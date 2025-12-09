@@ -131,5 +131,44 @@ app.post("/logout", async (req, res) => {
   res.json({ success: true, message: "Logged out" });
 });
 
+app.post("/submit-idea", async (req, res) => {
+  try {
+    const user = req.cookies.user || "anonymous"; // own from cookie/session
+    const {
+      category, title, hook, describe, pdf, banner, rate, available, date
+    } = req.body;
+
+    // Rate validation (0–5)
+    let rateNum = parseFloat(rate);
+    if (rateNum < 0 || rateNum > 5) rateNum = null;
+
+    // Insert into Supabase
+    const { data, error } = await supabase
+      .from("Ideas")
+      .insert([
+        {
+          own: user,
+          category,
+          title,
+          hook,
+          describe,
+          pdf,
+          banner,
+          rate: rateNum,
+          available: available === true || available === "on",
+          date
+        }
+      ])
+      .select(); // returns inserted row
+
+    if (error) throw error;
+
+    res.json({ message: "Idea submitted!", id: data[0].id });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 
 app.listen(3000, () => console.log("Server running on port 3000"));
