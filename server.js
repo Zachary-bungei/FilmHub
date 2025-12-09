@@ -27,6 +27,7 @@ app.post("/api", async (req, res) => {
       case "signup":
         response = await supabase.auth.admin.createUser({
           email: data.email,
+          username: data.username,
           password: data.password,
         });
         break;
@@ -34,7 +35,7 @@ app.post("/api", async (req, res) => {
       // ---------------- LOGIN ----------------
       case "login":
         response = await supabase.auth.signInWithPassword({
-          email: data.email,
+          username: data.username,
           password: data.password,
         });
         break;
