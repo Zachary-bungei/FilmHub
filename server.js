@@ -30,12 +30,14 @@ app.post("/api", async (req, res) => {
           username: data.username,
           password: data.password,
         });
-        
-        // if (create.error || !create.data || !create.data.user) {
-        //   await supabase.auth.admin.updateUserById(response.data.user, {
-        //     email_confirmed_at: new Date().toISOString()
-        //   });
-        // }
+        if (response.error || !response.data?.user?.id) {
+          // response = create;
+          break;
+        }
+        let userId = response.data.user.id;
+           let verify = await supabase.auth.admin.updateUserById(userId, {
+           email_confirmed_at: new Date().toISOString()
+        });
         break;
 
                // options: {
