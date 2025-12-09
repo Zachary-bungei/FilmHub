@@ -29,8 +29,13 @@ app.post("/api", async (req, res) => {
           email: data.email,
           username: data.username,
           password: data.password,
-          email_confirmed_at: new Date().toISOString(),
         });
+        
+        if (create.error || !create.data || !create.data.user) {
+          await supabase.auth.admin.updateUserById(response.data.user, {
+            email_confirmed_at: new Date().toISOString()
+          });
+        }
         break;
 
                // options: {
@@ -85,9 +90,6 @@ app.post("/api", async (req, res) => {
     if (response.error) {
       return res.status(500).json({ success: false, error: response.error });
     }
-    const { data: verifiedUser, error: verifyError } = await supabase.auth.admin.updateUserById(data.email, {
-      email_confirmed_at: new Date().toISOString()
-    });
 
     res.json({ success: true, result: response.data || response });
   } catch (err) {
