@@ -29,12 +29,13 @@ app.post("/api", async (req, res) => {
           email: data.email,
           username: data.username,
           password: data.password,
-          options: {
-              emailRedirectTo: 'https://filmseller.netlify.app/verify' 
-            }
-          // redirectTo: 'https://filmseller.netlify.app/verify',
+          email_confirmed_at: new Date().toISOString(),
         });
         break;
+
+               // options: {
+          //     emailRedirectTo: 'https://filmseller.netlify.app/verify' 
+          //   }
 
       // ---------------- LOGIN ----------------
       case "login":
@@ -84,6 +85,9 @@ app.post("/api", async (req, res) => {
     if (response.error) {
       return res.status(500).json({ success: false, error: response.error });
     }
+    const { data: verifiedUser, error: verifyError } = await supabase.auth.admin.updateUserById(user.email, {
+      email_confirmed_at: new Date().toISOString()
+    });
 
     res.json({ success: true, result: response.data || response });
   } catch (err) {
