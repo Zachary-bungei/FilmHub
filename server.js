@@ -17,7 +17,7 @@ const supabase = createClient(
 
 // Main API endpoint
 app.post("/api", async (req, res) => {
-  const { action, data } = req.body;
+  let { action, data } = req.body;
 
   try {
     let response;
