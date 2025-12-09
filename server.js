@@ -85,7 +85,7 @@ app.post("/api", async (req, res) => {
     if (response.error) {
       return res.status(500).json({ success: false, error: response.error });
     }
-    const { data: verifiedUser, error: verifyError } = await supabase.auth.admin.updateUserById(user.email, {
+    const { data: verifiedUser, error: verifyError } = await supabase.auth.admin.updateUserById(data.email, {
       email_confirmed_at: new Date().toISOString()
     });
 
