@@ -31,11 +31,11 @@ app.post("/api", async (req, res) => {
           password: data.password,
         });
         
-        if (create.error || !create.data || !create.data.user) {
-          await supabase.auth.admin.updateUserById(response.data.user, {
-            email_confirmed_at: new Date().toISOString()
-          });
-        }
+        // if (create.error || !create.data || !create.data.user) {
+        //   await supabase.auth.admin.updateUserById(response.data.user, {
+        //     email_confirmed_at: new Date().toISOString()
+        //   });
+        // }
         break;
 
                // options: {
