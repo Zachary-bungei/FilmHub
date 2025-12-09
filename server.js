@@ -35,7 +35,6 @@ app.post("/api", async (req, res) => {
       // ---------------- LOGIN ----------------
       case "login":
         response = await supabase.auth.signInWithPassword({
-          username: data.username,
           password: data.password,
           email: data.email,
         });
