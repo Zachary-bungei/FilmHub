@@ -29,7 +29,10 @@ app.post("/api", async (req, res) => {
           email: data.email,
           username: data.username,
           password: data.password,
-          redirectTo: 'https://filmseller.netlify.app/verify',
+          options: {
+              emailRedirectTo: 'https://filmseller.netlify.app/verify' 
+            }
+          // redirectTo: 'https://filmseller.netlify.app/verify',
         });
         break;
 
