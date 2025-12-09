@@ -3,12 +3,13 @@ const express = require("express");
 const bodyParser = require("body-parser"); //cookie-parser
 const cors = require("cors");
 const { createClient } = require("@supabase/supabase-js");
-require("dotenv").config();
 const cookieParser = require("cookie-parser");
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+app.use(cookieParser());
+
 
 // Supabase client
 const supabase = createClient(
@@ -30,6 +31,10 @@ app.post("/api", async (req, res) => {
           email: data.email,
           username: data.username,
           password: data.password,
+          ser_metadata: {
+            name: data.username,
+            rating: data.rating  || null 
+          }
         });
         if (response.error || !response.result?.user?.id) {
           // response = create;
@@ -41,9 +46,6 @@ app.post("/api", async (req, res) => {
         });
         break;
 
-               // options: {
-          //     emailRedirectTo: 'https://filmseller.netlify.app/verify' 
-          //   }
 
       // ---------------- LOGIN ----------------
       case "login":
@@ -100,7 +102,7 @@ app.post("/api", async (req, res) => {
   }
 });
 
-app.get("/check-session", async (req, res) => {
+app.post("/check-session", async (req, res) => {
   const token = req.cookies.sb_token; 
   
   if (!token) {
