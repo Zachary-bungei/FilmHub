@@ -115,7 +115,7 @@ app.post("/api", async (req, res) => {
   }
 });
 
-app.post("/check-session", async (req, res) => {
+app.post("/checksession", async (req, res) => {
   const token = req.cookies.sb_token; 
   
   if (!token) {
