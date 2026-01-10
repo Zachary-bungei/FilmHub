@@ -301,7 +301,7 @@ app.post("/auth", async (req, res) => {
         res.cookie("sb-access-token", access_token, {
           httpOnly: true,
           secure: true,
-          sameSite: "lax",
+          sameSite: "none",
           path: "/",
           maxAge: TWO_DAYS,
         });
@@ -309,7 +309,7 @@ app.post("/auth", async (req, res) => {
         res.cookie("sb-refresh-token", refresh_token, {
           httpOnly: true,
           secure: true,
-          sameSite: "lax",
+          sameSite: "none",
           path: "/",
           maxAge: TWO_DAYS,
         });
