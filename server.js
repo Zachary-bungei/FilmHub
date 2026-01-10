@@ -240,6 +240,13 @@ const allowedOrigins = ['https://filmseller.netlify.app'];
 app.use((req, res, next) => {
   const origin = req.headers.origin;
 
+  console.log("---- Incoming request ----");
+  console.log("Method:", req.method);
+  console.log("URL:", req.url);
+  console.log("Origin header:", origin);
+  console.log("Cookies sent by browser:", req.headers.cookie);
+  console.log("-------------------------");
+
   if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
   }
