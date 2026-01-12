@@ -7,7 +7,6 @@ const { createClient } = require("@supabase/supabase-js");
 const cookieParser = require("cookie-parser");
 
 const app = express();
-// app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
 
@@ -17,6 +16,10 @@ const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_KEY
 );
+app.use(cors({
+  origin: 'https://filmseller.netlify.app'
+}));
+
 const allowedOrigins = ['https://filmseller.netlify.app'];
 
 app.use((req, res, next) => {
@@ -91,30 +94,16 @@ app.post("/auth", async (req, res) => {
         }
         const { access_token, refresh_token } = response.data.session;
         const TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
-
-        // res.cookie("sb-access-token", access_token, {
-        //   httpOnly: true,
-        //   secure: true,
-        //   sameSite: "none",
-        //   path: "/",
-        //   maxAge: TWO_DAYS,
-        // });
-      
-        // res.cookie("sb-refresh-token", refresh_token, {
-        //   httpOnly: true,
-        //   secure: true,
-        //   sameSite: "none",
-        //   path: "/",
-        //   maxAge: TWO_DAYS,
-        // });
+        
         return res.json({
-        access_token: data.session.access_token,
-        refresh_token: data.session.refresh_token,
-        expires_at: data.expires_at,
-        user: {
-          id: data.user.id,
-          email: data.user.email
-        }
+          access_token: data.session.access_token,
+          refresh_token: data.session.refresh_token,
+          expires_at: data.expires_at,
+          user: {
+            id: data.user.id,
+            email: data.user.email
+          }
+        });
         break;
 
       default:
