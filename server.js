@@ -95,7 +95,7 @@ app.post("/auth", async (req, res) => {
         const { access_token, refresh_token } = response.data.session;
         const TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
         
-        return res.json({
+        res.json({
           access_token: data.session.access_token,
           refresh_token: data.session.refresh_token,
           expires_at: data.expires_at,
@@ -105,18 +105,18 @@ app.post("/auth", async (req, res) => {
           }
         });
         break;
-
+        
       default:
         return res.status(400).json({ error: "Unknown action" });
     }
 
     if (response.error) {
       // return res.status(500).json({ success: false, error: response.error });
-        return res.json({ success: false });
+      return res.json({ success: false });
     }
 
-    // res.json({ success: true, result: response.data || response });
-      return res.json({ success: true });
+    res.json({ success: true, result: response.data || response });
+    return res.json({ success: true });
   } catch (err) {
     // res.status(500).json({ success: false, error: err.message });
       return res.json({ success: false });
