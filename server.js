@@ -59,6 +59,7 @@ app.get('/protected', async (req, res) => {
 // Main API endpoint
 app.post("/auth", async (req, res) => {
   let { action, data } = req.body;
+  
   try {
     let response;
     switch (action) {
@@ -111,15 +112,15 @@ app.post("/auth", async (req, res) => {
     }
 
     if (response.error) {
-      // return res.status(500).json({ success: false, error: response.error });
-      return res.json({ success: false });
+      return res.status(500).json({ success: false, error: response.error });
+      // return res.json({ success: false });
     }
 
     res.json({response.data});
     return res.json({ success: true });
   } catch (err) {
-    // res.status(500).json({ success: false, error: err.message });
-      return res.json({ success: false });
+    res.status(500).json({ success: false, error: err.message });
+      // return res.json({ success: false });
   }
 });
 
