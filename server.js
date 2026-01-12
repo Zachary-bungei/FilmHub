@@ -22,13 +22,6 @@ const allowedOrigins = ['https://filmseller.netlify.app'];
 app.use((req, res, next) => {
   const origin = req.headers.origin;
 
-  // console.log("---- Incoming request ----");
-  // console.log("Method:", req.method);
-  // console.log("URL:", req.url);
-  // console.log("Origin header:", origin);
-  // console.log("Cookies sent by browser:", req.headers.cookie);
-  // console.log("-------------------------");
-
   if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
   }
@@ -45,6 +38,19 @@ app.use((req, res, next) => {
   }
 
   next();
+});
+app.get('/protected', async (req, res) => {
+  const token = req.headers.authorization?.replace('Bearer ', '')
+  if (!token) return res.status(401).json({ error: 'Missing token' })
+
+  const { data: { user }, error } =
+    await supabase.auth.getUser(token)
+
+  if (error || !user) {
+    return res.status(401).json({ error: 'Invalid token' })
+  }
+
+  res.json({ message: 'Authorized', user })
 });
 
 // Main API endpoint
@@ -86,21 +92,29 @@ app.post("/auth", async (req, res) => {
         const { access_token, refresh_token } = response.data.session;
         const TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
 
-        res.cookie("sb-access-token", access_token, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-          path: "/",
-          maxAge: TWO_DAYS,
-        });
+        // res.cookie("sb-access-token", access_token, {
+        //   httpOnly: true,
+        //   secure: true,
+        //   sameSite: "none",
+        //   path: "/",
+        //   maxAge: TWO_DAYS,
+        // });
       
-        res.cookie("sb-refresh-token", refresh_token, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-          path: "/",
-          maxAge: TWO_DAYS,
-        });
+        // res.cookie("sb-refresh-token", refresh_token, {
+        //   httpOnly: true,
+        //   secure: true,
+        //   sameSite: "none",
+        //   path: "/",
+        //   maxAge: TWO_DAYS,
+        // });
+        return res.json({
+        access_token: data.session.access_token,
+        refresh_token: data.session.refresh_token,
+        expires_at: data.expires_at,
+        user: {
+          id: data.user.id,
+          email: data.user.email
+        }
         break;
 
       default:
@@ -160,9 +174,9 @@ app.post("/checksession", async (req, res) => {
 });
 
 app.post("/submitidea", async (req, res) => {
-  const userId = req.user.id;
+  // const userId = req.user.id;
 // requireAuth
-  const { title, hook, describe, pdf, banner, date } = req.body;
+  const {userId, title, hook, describe, pdf, banner, date } = req.body;
 
   const { data, error } = await supabase
     .from("Ideas")
@@ -187,6 +201,8 @@ app.post("/submitidea", async (req, res) => {
 
   res.json({ success: true, id: data[0].id });
 });
+
+
 
 // app.post("/checksession", async (req, res) => {
 //   const token = req.cookies['sb-access-token']; // fixed name
