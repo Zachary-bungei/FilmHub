@@ -116,7 +116,7 @@ app.post("/auth", async (req, res) => {
       // return res.json({ success: false });
     }
 
-    res.json({response.data});
+    res.json({data: response.data});
     return res.json({ success: true });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
