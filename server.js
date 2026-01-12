@@ -146,9 +146,9 @@ app.post("/auth", async (req, res) => {
 //   });
 // });
 
-app.post("/submit-idea", requireAuth, async (req, res) => {
+app.post("/submit-idea", async (req, res) => {
   const userId = req.user.id;
-
+// requireAuth
   const { title, hook, describe, pdf, banner, date } = req.body;
 
   const { data, error } = await supabase
