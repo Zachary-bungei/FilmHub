@@ -157,26 +157,23 @@ app.post("/logout", async (req, res) => {
 
 
 app.post("/checksession", async (req, res) => {
-  const accessToken = req.cookies["sb-access-token"];
+  const authHeader = req.headers.authorization;
 
-  if (!accessToken) {
+  if (!authHeader) {
     return res.json({ loggedIn: false });
   }
 
-  const { data, error } = await supabase.auth.getUser(accessToken);
+  const token = authHeader.replace("Bearer ", "");
 
-  if (error || !data?.user) {
+  const { data, error } = await supabase.auth.getUser(token);
+
+  if (error || !data.user) {
     return res.json({ loggedIn: false });
   }
 
   res.json({
     loggedIn: true,
-    user: {
-      id: data.user.id,
-      email: data.user.email,
-      name: data.user.user_metadata?.name || null,
-      profile_img: data.user.user_metadata?.profile_img || null
-    }
+    },
   });
 });
 
