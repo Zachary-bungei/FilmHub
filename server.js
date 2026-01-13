@@ -19,9 +19,17 @@ const supabase = createClient(
 
 app.use(cors({
   origin: 'https://filmseller.netlify.app',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  credentials: true, 
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: [
+    'Origin',
+    'X-Requested-With',
+    'Content-Type',
+    'Accept',
+    'Authorization'
+  ],
 }));
+
 const allowedOrigins = ['https://filmseller.netlify.app'];
 
 app.use((req, res, next) => {
