@@ -16,9 +16,7 @@ const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_KEY
 );
-// app.use(cors({
-//   origin: 'https://filmseller.netlify.app'
-// }));
+
 app.use(cors({
   origin: 'https://filmseller.netlify.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
