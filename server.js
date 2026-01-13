@@ -171,11 +171,9 @@ app.post("/checksession", async (req, res) => {
     return res.json({ loggedIn: false });
   }
 
-  res.json({
-    loggedIn: true,
-    },
-  });
+  res.json({loggedIn: true});
 });
+
 
 app.post("/submitidea", async (req, res) => {
   // const userId = req.user.id;
