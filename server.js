@@ -16,10 +16,14 @@ const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_KEY
 );
+// app.use(cors({
+//   origin: 'https://filmseller.netlify.app'
+// }));
 app.use(cors({
-  origin: 'https://filmseller.netlify.app'
+  origin: 'https://filmseller.netlify.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true, 
 }));
-
 const allowedOrigins = ['https://filmseller.netlify.app'];
 
 app.use((req, res, next) => {
@@ -111,17 +115,6 @@ app.post("/auth", async (req, res) => {
           }
         });
 
-        // const { access_token, refresh_token } = response.data.session;
-        
-        // res.json({
-        //   access_token: data.session.access_token,
-        //   refresh_token: data.session.refresh_token,
-        //   expires_at: data.expires_at,
-        //   user: {
-        //     id: data.user.id,
-        //     email: data.user.email
-        //   }
-        // });
         break;
         
       default:
