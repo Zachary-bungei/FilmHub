@@ -93,18 +93,35 @@ app.post("/auth", async (req, res) => {
         if (response.error || !response.data?.session) {
           break;
         }
-        const { access_token, refresh_token } = response.data.session;
-        const TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
+
+        const {
+          access_token,
+          refresh_token,
+          expires_at,
+          user
+        } = response.data.session;
         
         res.json({
-          access_token: data.session.access_token,
-          refresh_token: data.session.refresh_token,
-          expires_at: data.expires_at,
+          access_token,
+          refresh_token,
+          expires_at,
           user: {
-            id: data.user.id,
-            email: data.user.email
+            id: user.id,
+            email: user.email
           }
         });
+
+        // const { access_token, refresh_token } = response.data.session;
+        
+        // res.json({
+        //   access_token: data.session.access_token,
+        //   refresh_token: data.session.refresh_token,
+        //   expires_at: data.expires_at,
+        //   user: {
+        //     id: data.user.id,
+        //     email: data.user.email
+        //   }
+        // });
         break;
         
       default:
