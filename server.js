@@ -29,20 +29,20 @@ const supabase = createClient(
 //     'Authorization'
 //   ],
 // }));
-// app.use(cors({
-//   origin: 'https://filmseller.netlify.app',
-//   credentials: true,
-//   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-//   allowedHeaders: [
-//     'Origin',
-//     'X-Requested-With',
-//     'Content-Type',
-//     'Accept',
-//     'Authorization'
-//   ],
-// }));
+app.use(cors({
+  origin: 'https://filmseller.netlify.app',
+  credentials: true,
+  methods: ['GET,POST,PUT,PATCH,DELETE,OPTIONS'],
+  allowedHeaders: [
+    'Origin',
+    'X-Requested-With',
+    'Content-Type',
+    'Accept',
+    'Authorization'
+  ],
+}));
 
-// app.options('*', cors());
+app.options('*', cors());
 const allowedOrigins = ['https://filmseller.netlify.app'];
 
 app.use((req, res, next) => {
