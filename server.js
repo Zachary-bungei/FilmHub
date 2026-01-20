@@ -36,19 +36,16 @@ app.options('*', cors({
   credentials: true,
 }));
 
-app.get('/protected', async (req, res) => {
-  const token = req.headers.authorization?.replace('Bearer ', '')
-  if (!token) return res.status(401).json({ error: 'Missing token' })
+app.post('/protected', async (req, res) => {
+  const token = req.headers.authorization?.replace('Bearer ', '');
+  if (!token) return res.status(401).json({ error: 'Missing token' });
 
-  const { data: { user }, error } =
-    await supabase.auth.getUser(token)
+  const { data: { user }, error } = await supabase.auth.getUser(token);
+  if (error || !user) return res.status(401).json({ error: 'Invalid token' });
 
-  if (error || !user) {
-    return res.status(401).json({ error: 'Invalid token' })
-  }
-
-  res.json({ message: 'Authorized', user })
+  res.json({ message: 'Authorized', user });
 });
+
 
 // Main API endpoint
 app.post("/auth", async (req, res) => {
