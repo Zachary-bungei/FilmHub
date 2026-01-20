@@ -35,28 +35,7 @@ app.options('*', cors({
   origin: 'https://filmseller.netlify.app',
   credentials: true,
 }));
-const allowedOrigins = ['https://filmseller.netlify.app'];
 
-// app.use((req, res, next) => {
-//   const origin = req.headers.origin;
-
-//   if (allowedOrigins.includes(origin)) {
-//     res.setHeader('Access-Control-Allow-Origin', origin);
-//   }
-
-//   res.setHeader('Access-Control-Allow-Credentials', 'true');
-//   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
-//   res.setHeader(
-//     'Access-Control-Allow-Headers',
-//     'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-//   );
-
-//   if (req.method === 'OPTIONS') {
-//     return res.sendStatus(204);
-//   }
-
-//   next();
-// });
 app.get('/protected', async (req, res) => {
   const token = req.headers.authorization?.replace('Bearer ', '')
   if (!token) return res.status(401).json({ error: 'Missing token' })
