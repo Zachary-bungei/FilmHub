@@ -189,94 +189,45 @@ app.post("/submitidea", async (req, res) => {
 });
 
 
+app.post("/submit-idea", async (req, res) => {
+  
+  try {
+    // const user = req.cookies.user || "anonymous"; 
+    const {
+      onwer, category, title, hook, describe, pdf, banner, rate, available, date
+    } = req.body;
 
-// app.post("/checksession", async (req, res) => {
-//   const token = req.cookies['sb-access-token']; // fixed name
+    
+    let rateNum = parseFloat(rate);
+    if (rateNum < 0 || rateNum > 5) rateNum = null;
 
-//   if (!token) return res.json({ loggedIn: false });
+    // Insert into Supabase
+    const { data, error } = await supabase
+      .from("Ideas")
+      .insert([
+        {
+          onwer,
+          category,
+          title,
+          hook,
+          describe,
+          pdf,
+          banner,
+          rate: 5,
+          available: true,
+          date
+        }
+      ])
+      .select(); 
 
-//   const supa = createClient(SUPABASE_URL, SUPABASE_ANON, {
-//     global: { headers: { Authorization: `Bearer ${token}` } }
-//   });
+    if (error) throw error;
 
-//   const { data, error } = await supa.auth.getUser();
-
-//   if (error || !data.user) return res.json({ loggedIn: false });
-
-//   res.json({
-//     loggedIn: true,
-//     user: {
-//       id: data.user.id,
-//       email: data.user.email,
-//       name: data.user.user_metadata.name,
-//       profile_img: data.user.user_metadata.profile_img || null
-//     }
-//   });
-// });
-
-
-
-// POST /logout
-// app.post("/logout", async (req, res) => {
-//   const refreshToken = req.cookies['sb-refresh-token'];
-
-//   // Clear cookies
-//   res.clearCookie('sb-access-token', { path: '/' });
-//   res.clearCookie('sb-refresh-token', { path: '/' });
-
-//   // Optionally invalidate session on Supabase
-//   if (refreshToken) {
-//     try {
-//       await supabase.auth.admin.signOutUserWithRefreshToken(refreshToken);
-//     } catch (err) {
-//       console.error("Failed to invalidate Supabase session:", err.message);
-//     }
-//   }
-
-//   res.json({ success: true, message: "Logged out" });
-// });
-
-
-
-
-// app.post("/submit-idea", async (req, res) => {
-//   try {
-//     const user = req.cookies.user || "anonymous"; // own from cookie/session
-//     const {
-//       category, title, hook, describe, pdf, banner, rate, available, date
-//     } = req.body;
-
-//     // Rate validation (0–5)
-//     let rateNum = parseFloat(rate);
-//     if (rateNum < 0 || rateNum > 5) rateNum = null;
-
-//     // Insert into Supabase
-//     const { data, error } = await supabase
-//       .from("Ideas")
-//       .insert([
-//         {
-//           own: "zaxharr",
-//           category: "action",
-//           title,
-//           hook,
-//           describe,
-//           pdf,
-//           banner,
-//           rate: 0,
-//           available: true,
-//           date
-//         }
-//       ])
-//       .select(); // returns inserted row
-
-//     if (error) throw error;
-
-//     res.json({ message: "Idea submitted!", id: data[0].id });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// });
+    res.json({ message: "Idea submitted!", id: data[0].id });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 
 app.listen(3000, () => console.log("Server running on port 3000"));
