@@ -35,6 +35,14 @@ app.options('*', cors({
   origin: 'https://filmseller.netlify.app',
   credentials: true,
 }));
+const allowedOrigin = "https://filmseller.netlify.app";
+
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
 
 app.post('/protected', async (req, res) => {
   const { token } = req.body;
@@ -168,7 +176,7 @@ app.post("/submitidea", async (req, res) => {
     .from("Ideas")
     .insert([
       {
-        own: userId,
+        userId,
         title,
         hook,
         describe,
